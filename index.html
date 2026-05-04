@@ -3,157 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>تطبيق الوكيل - توزيع الطحين</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>نظام الوكيل - الواجهة الزجاجية 3D</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="app-container">
-    
-    <header class="header neu-out">
-        <button class="icon-btn neu-btn"><i class="fa-solid fa-bars"></i></button>
-        <h2 id="page-title">الرئيسية</h2>
-        <button class="icon-btn neu-btn"><i class="fa-regular fa-bell"></i></button>
-    </header>
+    <div class="bg-animated"></div>
 
-    <main class="content">
-        
-        <section id="tab-home" class="page active">
-            <h3 class="section-title">ملخص اليوم</h3>
-            <div class="stats-grid">
-                <div class="stat-box neu-out">
-                    <i class="fa-solid fa-users text-muted"></i>
-                    <h3 id="stat-total-families">0</h3>
-                    <p>إجمالي العوائل</p>
-                </div>
-                <div class="stat-box neu-out">
-                    <i class="fa-solid fa-circle-check text-success"></i>
-                    <h3 id="stat-received">0</h3>
-                    <p>مستلم</p>
-                </div>
-                <div class="stat-box neu-out">
-                    <i class="fa-solid fa-circle-xmark text-danger"></i>
-                    <h3 id="stat-waiting">0</h3>
-                    <p>غير مستلم</p>
-                </div>
-            </div>
+    <div id="toast-container"></div>
 
-            <h3 class="section-title mt-20">المخزون الحالي</h3>
-            <div class="inventory-card neu-out text-center">
-                <i class="fa-solid fa-sack-dollar fa-3x text-warning mb-10"></i>
-                <h2><span id="stat-remaining-inv" class="text-primary">0</span> كغم</h2>
-                <p class="text-muted text-sm mt-5">من أصل <span id="stat-total-inv">0</span> كغم مستلم</p>
-                <div class="progress-container neu-in mt-15">
-                    <div class="progress-bar" id="inv-progress"></div>
-                </div>
+    <div id="lock-screen" class="glass-overlay">
+        <div class="glass-panel 3d-out text-center p-20 lock-box">
+            <h2 class="text-white mb-20 text-shadow">نظام الوكيل المعتمد</h2>
+            <div class="fingerprint-wrapper mb-20" onclick="showPasswordInput()">
+                <i class="fa-solid fa-fingerprint fa-5x text-cyan fingerprint-icon"></i>
             </div>
-        </section>
-
-        <section id="tab-families" class="page">
-            <div class="search-box neu-in mb-20">
-                <i class="fa-solid fa-search text-muted"></i>
-                <input type="text" id="search-input" placeholder="ابحث بالاسم أو رقم البطاقة..." onkeyup="filterFamilies()">
-            </div>
+            <p id="lock-hint" class="text-light">المس البصمة للبدء</p>
             
-            <button class="btn neu-btn w-100 text-primary mb-20" onclick="toggleModal('add-family-modal', true)">
-                <i class="fa-solid fa-plus"></i> إضافة عائلة جديدة
-            </button>
-
-            <div id="families-list">
-                </div>
-        </section>
-
-        <section id="tab-delivery" class="page">
-            <div class="neu-out p-20 text-center mb-20">
-                <i class="fa-solid fa-truck-ramp-box fa-3x text-success mb-10"></i>
-                <h3 class="text-primary">بوابة التسليم</h3>
-                <p class="text-muted text-sm mt-10">حدد العائلة لعرض استحقاقها وتسليم الحصة.</p>
+            <div id="password-area" class="hidden mt-20">
+                <input type="password" id="sys-password" class="glass-input 3d-in w-100 mb-15 text-center text-xl text-white" placeholder="أدخل كلمة المرور">
+                <button class="glass-btn 3d-btn btn-success w-100" onclick="checkLogin()">فتح النظام <i class="fa-solid fa-unlock mr-5"></i></button>
             </div>
-
-            <div class="neu-out p-20">
-                <label class="text-muted text-sm mb-10" style="display:block;">اختر العائلة (غير المستلمة):</label>
-                <select id="family-select" class="neu-in w-100 p-15 mb-20" onchange="calcDelivery()">
-                    </select>
-
-                <div id="delivery-details" style="display: none;">
-                    <div class="flex-between mb-15">
-                        <span class="text-muted">عدد الأفراد:</span>
-                        <strong id="del-members">0</strong>
-                    </div>
-                    <div class="flex-between mb-15">
-                        <span class="text-muted">حصة الفرد:</span>
-                        <strong><span id="del-quota-per-person">9</span> كغم</strong>
-                    </div>
-                    <div class="flex-between mb-20 text-primary" style="font-size: 1.2rem; border-top: 1px dashed #ccc; padding-top: 10px;">
-                        <span>الكمية المستحقة:</span>
-                        <strong id="del-total-kg">0 كغم</strong>
-                    </div>
-                    
-                    <button class="btn neu-btn w-100 text-success" onclick="confirmDelivery()">
-                        تأكيد التسليم <i class="fa-solid fa-check mr-5"></i>
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <section id="tab-inventory" class="page">
-            <div class="stats-grid mb-20">
-                <div class="stat-box neu-out">
-                    <h3 class="text-success" id="inv-total">0</h3>
-                    <p>إجمالي المستلم</p>
-                </div>
-                <div class="stat-box neu-out">
-                    <h3 class="text-warning" id="inv-distributed">0</h3>
-                    <p>إجمالي الموزع</p>
-                </div>
-            </div>
-            
-            <div class="neu-out p-20 text-center">
-                <h3 class="text-primary mb-15">إدخال مخزني جديد</h3>
-                <input type="number" id="new-stock-input" class="neu-in w-100 p-15 mb-15" placeholder="الكمية بالكيلوغرام">
-                <button class="btn neu-btn w-100 text-primary" onclick="addInventory()">
-                    <i class="fa-solid fa-plus mr-5"></i> إضافة للمخزون
-                </button>
-            </div>
-        </section>
-
-    </main>
-
-    <nav class="bottom-nav neu-out-top">
-        <div class="nav-item active" onclick="switchTab('tab-home', 'الرئيسية', this)">
-            <div class="icon-wrapper"><i class="fa-solid fa-house"></i></div>
-            <span>الرئيسية</span>
-        </div>
-        <div class="nav-item" onclick="switchTab('tab-families', 'إدارة العوائل', this)">
-            <div class="icon-wrapper"><i class="fa-solid fa-users-viewfinder"></i></div>
-            <span>العوائل</span>
-        </div>
-        <div class="nav-item" onclick="switchTab('tab-delivery', 'تسليم الحصة', this)">
-            <div class="icon-wrapper"><i class="fa-solid fa-boxes-packing"></i></div>
-            <span>التسليم</span>
-        </div>
-        <div class="nav-item" onclick="switchTab('tab-inventory', 'سجل المخزون', this)">
-            <div class="icon-wrapper"><i class="fa-solid fa-warehouse"></i></div>
-            <span>المخزون</span>
-        </div>
-    </nav>
-</div>
-
-<div id="add-family-modal" class="modal">
-    <div class="modal-content neu-out p-20">
-        <h3 class="text-center text-primary mb-20">إضافة عائلة جديدة</h3>
-        <input type="text" id="add-f-name" class="neu-in w-100 p-15 mb-15" placeholder="اسم رب الأسرة">
-        <input type="number" id="add-f-card" class="neu-in w-100 p-15 mb-15" placeholder="رقم البطاقة التموينية">
-        <input type="number" id="add-f-members" class="neu-in w-100 p-15 mb-20" placeholder="عدد الأفراد">
-        
-        <div class="flex-between" style="gap: 15px;">
-            <button class="btn neu-btn w-100 text-success" onclick="addFamily()">حفظ</button>
-            <button class="btn neu-btn w-100 text-danger" onclick="toggleModal('add-family-modal', false)">إلغاء</button>
         </div>
     </div>
-</div>
+
+    <div id="confirm-modal" class="glass-overlay hidden">
+        <div class="glass-panel 3d-out p-20 text-center w-90 popup-anim">
+            <i class="fa-solid fa-triangle-exclamation fa-4x text-warning mb-15 text-shadow"></i>
+            <h3 class="text-white mb-10 text-shadow">تأكيد الإجراء</h3>
+            <p id="confirm-msg" class="text-light mb-20"></p>
+            <div class="flex-between gap-15">
+                <button id="confirm-yes" class="glass-btn 3d-btn btn-success w-100">نعم، متأكد</button>
+                <button class="glass-btn 3d-btn btn-danger w-100" onclick="closeModal('confirm-modal')">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="family-modal" class="glass-overlay hidden">
+        <div class="glass-panel 3d-out p-20 w-90 popup-anim">
+            <h3 id="fam-modal-title" class="text-cyan text-center mb-20 text-shadow">إضافة عائلة</h3>
+            <input type="hidden" id="fam-old-id">
+            <input type="text" id="fam-name" class="glass-input 3d-in w-100 mb-15 text-white" placeholder="اسم رب الأسرة الثلاثي">
+            <input type="number" id="fam-card" class="glass-input 3d-in w-100 mb-15 text-white" placeholder="رقم البطاقة التموينية">
+            <input type="number" id="fam-members" class="glass-input 3d-in w-100 mb-20 text-white" placeholder="عدد الأفراد">
+            <div class="flex-between gap-15">
+                <button class="glass-btn 3d-btn btn-success w-100" onclick="saveFamily()">حفظ</button>
+                <button class="glass-btn 3d-btn btn-danger w-100" onclick="closeModal('family-modal')">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-app" class="app-container hidden">
+        
+        <header class="header glass-panel border-bottom">
+            <h2 id="page-title" class="text-white text-shadow">الرئيسية</h2>
+            <i class="fa-solid fa-shield-halved text-cyan fa-lg"></i>
+        </header>
+
+        <main class="content">
+            
+            <section id="tab-home" class="page active">
+                <div class="glass-panel 3d-out p-15 mb-20">
+                    <div class="flex-between mb-15">
+                        <h3 class="text-white text-shadow"><i class="fa-solid fa-chart-simple text-cyan mr-5"></i> إحصائيات الدورة</h3>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="glass-card 3d-in text-center">
+                            <i class="fa-solid fa-users text-cyan mb-10 fa-2x drop-shadow"></i>
+                            <h3 id="stat-total-families" class="text-white text-xl">0</h3>
+                            <p class="text-light text-sm font-bold">العوائل</p>
+                        </div>
+                        <div class="glass-card 3d-in text-center">
+                            <i class="fa-solid fa-check text-success mb-10 fa-2x drop-shadow"></i>
+                            <h3 id="stat-received" class="text-success text-xl">0</h3>
+                            <p class="text-light text-sm font-bold">مستلم</p>
+                        </div>
+                        <div class="glass-card 3d-in text-center">
+                            <i class="fa-solid fa-clock text-warning mb-10 fa-2x drop-shadow"></i>
+                            <h3 id="stat-waiting" class="text-warning text-xl">0</h3>
+                            <p class="text-light text-sm font-bold">بانتظار</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel 3d-out p-20 text-center mb-20">
+                    <h3 class="text-white mb-10 text-shadow"><i class="fa-solid fa-warehouse text-warning mr-5"></i> المخزون المتبقي</h3>
+                    <h1 class="text-warning text-3xl mb-10 text-shadow"><span id="stat-remaining-inv">0</span> <span class="text-lg">كغم</span></h1>
+                    <div class="progress-bg 3d-in">
+                        <div class="progress-bar" id="inv-progress"></div>
+                    </div>
+                </div>
+
+                <button class="glass-btn 3d-btn btn-danger w-100 p-15 text-lg" onclick="triggerResetMonth()">
+                    <i class="fa-solid fa-rotate-right mr-5"></i> تصفير وبدء شهر جديد
+                </button>
+            </section>
+
+            <section id="tab-families" class="page">
+                <div class="flex-between gap-15 mb-20">
+                    <input type="text" id="search-input" class="glass-input 3d-in w-100 text-white" placeholder="🔍 ابحث بالاسم أو البطاقة..." onkeyup="filterFamilies()">
+                    <button class="glass-btn 3d-btn btn-cyan" onclick="openFamilyModal('add')" style="min-width: 50px;"><i class="fa-solid fa-plus"></i></button>
+                </div>
+                <div id="families-list" class="scroll-container"></div>
+            </section>
+
+            <section id="tab-delivery" class="page">
+                <div class="glass-panel 3d-out p-20 mb-20 text-center">
+                    <i class="fa-solid fa-truck-ramp-box fa-4x text-success mb-15 text-shadow"></i>
+                    <h3 class="text-white text-shadow">بوابة التسليم والديون</h3>
+                </div>
+
+                <div class="glass-panel 3d-out p-20">
+                    <label class="text-light mb-10 d-block"><i class="fa-solid fa-hand-pointer mr-5"></i> اختر العائلة (غير المستلمة):</label>
+                    <select id="family-select" class="glass-input 3d-in w-100 mb-20 text-white" onchange="calcDelivery()"></select>
+
+                    <div id="delivery-details" class="hidden">
+                        <div class="glass-card 3d-in p-15 mb-20">
+                            <div class="flex-between mb-10 border-bottom pb-5"><span class="text-light">عدد الأفراد:</span> <strong id="del-members" class="text-white">0</strong></div>
+                            <div class="flex-between mb-10 border-bottom pb-5"><span class="text-light">الديون السابقة:</span> <strong id="del-old-debt" class="text-danger">0 كغم</strong></div>
+                            <div class="flex-between mt-10"><span class="text-cyan font-bold">الاستحقاق الكلي:</span> <strong id="del-total-req" class="text-cyan text-xl text-shadow">0 كغم</strong></div>
+                        </div>
+
+                        <label class="text-light mb-10 d-block"><i class="fa-solid fa-scale-balanced mr-5"></i> الكمية المسلمة فعلياً (كغم):</label>
+                        <input type="number" id="del-actual-paid" class="glass-input 3d-in w-100 mb-10 text-center text-2xl text-white font-bold" onkeyup="calcNewDebt()">
+                        
+                        <div class="flex-between mb-20">
+                            <span class="text-light text-sm font-bold">سيتم تسجيل دين مقداره:</span>
+                            <strong id="del-new-debt" class="text-danger">0 كغم</strong>
+                        </div>
+
+                        <button class="glass-btn 3d-btn btn-success w-100 p-15 text-lg" onclick="processDelivery()">
+                            تأكيد التسليم <i class="fa-solid fa-check-double mr-5"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-inventory" class="page">
+                <div class="glass-panel 3d-out p-20 mb-20">
+                    <h3 class="text-white mb-15 text-shadow"><i class="fa-solid fa-box-open text-warning mr-5"></i> إدخال مخزون جديد</h3>
+                    <div class="flex-between gap-15">
+                        <input type="number" id="new-stock-input" class="glass-input 3d-in w-100 text-white" placeholder="الكمية الواردة (كغم)">
+                        <button class="glass-btn 3d-btn btn-warning font-bold" onclick="addInventory()">إضافة</button>
+                    </div>
+                </div>
+
+                <h3 class="text-white mb-15 text-shadow"><i class="fa-solid fa-clock-rotate-left text-cyan mr-5"></i> سجل عمليات التسليم</h3>
+                <div id="history-list" class="scroll-container" style="max-height: 350px; overflow-y: auto;"></div>
+            </section>
+
+            <section id="tab-settings" class="page">
+                <div class="glass-panel 3d-out p-20 mb-20">
+                    <h3 class="text-white mb-15 text-shadow"><i class="fa-solid fa-gear text-cyan mr-5"></i> إعدادات التوزيع</h3>
+                    <label class="text-light mb-10 d-block">حصة الفرد الواحد المحددة (كغم):</label>
+                    <div class="flex-between gap-15">
+                        <input type="number" id="setting-quota" class="glass-input 3d-in w-100 text-center text-xl text-white font-bold">
+                        <button class="glass-btn 3d-btn btn-success font-bold" onclick="saveSettings()">تحديث</button>
+                    </div>
+                </div>
+
+                <div class="glass-panel 3d-out p-20">
+                    <h3 class="text-white mb-15 text-shadow"><i class="fa-solid fa-database text-warning mr-5"></i> النسخ الاحتياطي للأمان</h3>
+                    <p class="text-light text-sm mb-15 font-bold">احفظ نسخة من بياناتك لتجنب فقدانها عند تغيير الهاتف.</p>
+                    <button class="glass-btn 3d-btn btn-cyan w-100 mb-15 font-bold" onclick="exportData()">
+                        <i class="fa-solid fa-download mr-5"></i> تنزيل نسخة احتياطية (حفظ)
+                    </button>
+                    <hr class="border-bottom mb-15">
+                    <input type="file" id="import-file" class="hidden" accept=".json" onchange="importData(event)">
+                    <button class="glass-btn 3d-btn btn-warning w-100 font-bold" onclick="document.getElementById('import-file').click()">
+                        <i class="fa-solid fa-upload mr-5"></i> استرجاع بيانات (رفع)
+                    </button>
+                </div>
+            </section>
+
+        </main>
+
+        <nav class="bottom-nav glass-panel border-top">
+            <div class="nav-item active" onclick="switchTab('tab-home', 'الرئيسية', this)"><i class="fa-solid fa-house"></i><span>الرئيسية</span></div>
+            <div class="nav-item" onclick="switchTab('tab-families', 'إدارة العوائل', this)"><i class="fa-solid fa-users"></i><span>العوائل</span></div>
+            <div class="nav-item" onclick="switchTab('tab-delivery', 'التسليم', this)"><i class="fa-solid fa-boxes-packing"></i><span>التسليم</span></div>
+            <div class="nav-item" onclick="switchTab('tab-inventory', 'السجل', this)"><i class="fa-solid fa-clipboard-list"></i><span>السجل</span></div>
+            <div class="nav-item" onclick="switchTab('tab-settings', 'الإعدادات', this)"><i class="fa-solid fa-sliders"></i><span>الإعدادات</span></div>
+        </nav>
+    </div>
 
 <script src="script.js"></script>
 </body>
