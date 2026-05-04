@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تطبيق الوكيل - توزيع الطحين</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-container">
+    
+    <header class="header neu-out">
+        <button class="icon-btn neu-btn"><i class="fa-solid fa-bars"></i></button>
+        <h2 id="page-title">الرئيسية</h2>
+        <button class="icon-btn neu-btn"><i class="fa-regular fa-bell"></i></button>
+    </header>
+
+    <main class="content">
+        
+        <section id="tab-home" class="page active">
+            <h3 class="section-title">ملخص اليوم</h3>
+            <div class="stats-grid">
+                <div class="stat-box neu-out">
+                    <i class="fa-solid fa-users text-muted"></i>
+                    <h3 id="stat-total-families">0</h3>
+                    <p>إجمالي العوائل</p>
+                </div>
+                <div class="stat-box neu-out">
+                    <i class="fa-solid fa-circle-check text-success"></i>
+                    <h3 id="stat-received">0</h3>
+                    <p>مستلم</p>
+                </div>
+                <div class="stat-box neu-out">
+                    <i class="fa-solid fa-circle-xmark text-danger"></i>
+                    <h3 id="stat-waiting">0</h3>
+                    <p>غير مستلم</p>
+                </div>
+            </div>
+
+            <h3 class="section-title mt-20">المخزون الحالي</h3>
+            <div class="inventory-card neu-out text-center">
+                <i class="fa-solid fa-sack-dollar fa-3x text-warning mb-10"></i>
+                <h2><span id="stat-remaining-inv" class="text-primary">0</span> كغم</h2>
+                <p class="text-muted text-sm mt-5">من أصل <span id="stat-total-inv">0</span> كغم مستلم</p>
+                <div class="progress-container neu-in mt-15">
+                    <div class="progress-bar" id="inv-progress"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab-families" class="page">
+            <div class="search-box neu-in mb-20">
+                <i class="fa-solid fa-search text-muted"></i>
+                <input type="text" id="search-input" placeholder="ابحث بالاسم أو رقم البطاقة..." onkeyup="filterFamilies()">
+            </div>
+            
+            <button class="btn neu-btn w-100 text-primary mb-20" onclick="toggleModal('add-family-modal', true)">
+                <i class="fa-solid fa-plus"></i> إضافة عائلة جديدة
+            </button>
+
+            <div id="families-list">
+                </div>
+        </section>
+
+        <section id="tab-delivery" class="page">
+            <div class="neu-out p-20 text-center mb-20">
+                <i class="fa-solid fa-truck-ramp-box fa-3x text-success mb-10"></i>
+                <h3 class="text-primary">بوابة التسليم</h3>
+                <p class="text-muted text-sm mt-10">حدد العائلة لعرض استحقاقها وتسليم الحصة.</p>
+            </div>
+
+            <div class="neu-out p-20">
+                <label class="text-muted text-sm mb-10" style="display:block;">اختر العائلة (غير المستلمة):</label>
+                <select id="family-select" class="neu-in w-100 p-15 mb-20" onchange="calcDelivery()">
+                    </select>
+
+                <div id="delivery-details" style="display: none;">
+                    <div class="flex-between mb-15">
+                        <span class="text-muted">عدد الأفراد:</span>
+                        <strong id="del-members">0</strong>
+                    </div>
+                    <div class="flex-between mb-15">
+                        <span class="text-muted">حصة الفرد:</span>
+                        <strong><span id="del-quota-per-person">9</span> كغم</strong>
+                    </div>
+                    <div class="flex-between mb-20 text-primary" style="font-size: 1.2rem; border-top: 1px dashed #ccc; padding-top: 10px;">
+                        <span>الكمية المستحقة:</span>
+                        <strong id="del-total-kg">0 كغم</strong>
+                    </div>
+                    
+                    <button class="btn neu-btn w-100 text-success" onclick="confirmDelivery()">
+                        تأكيد التسليم <i class="fa-solid fa-check mr-5"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab-inventory" class="page">
+            <div class="stats-grid mb-20">
+                <div class="stat-box neu-out">
+                    <h3 class="text-success" id="inv-total">0</h3>
+                    <p>إجمالي المستلم</p>
+                </div>
+                <div class="stat-box neu-out">
+                    <h3 class="text-warning" id="inv-distributed">0</h3>
+                    <p>إجمالي الموزع</p>
+                </div>
+            </div>
+            
+            <div class="neu-out p-20 text-center">
+                <h3 class="text-primary mb-15">إدخال مخزني جديد</h3>
+                <input type="number" id="new-stock-input" class="neu-in w-100 p-15 mb-15" placeholder="الكمية بالكيلوغرام">
+                <button class="btn neu-btn w-100 text-primary" onclick="addInventory()">
+                    <i class="fa-solid fa-plus mr-5"></i> إضافة للمخزون
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <nav class="bottom-nav neu-out-top">
+        <div class="nav-item active" onclick="switchTab('tab-home', 'الرئيسية', this)">
+            <div class="icon-wrapper"><i class="fa-solid fa-house"></i></div>
+            <span>الرئيسية</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('tab-families', 'إدارة العوائل', this)">
+            <div class="icon-wrapper"><i class="fa-solid fa-users-viewfinder"></i></div>
+            <span>العوائل</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('tab-delivery', 'تسليم الحصة', this)">
+            <div class="icon-wrapper"><i class="fa-solid fa-boxes-packing"></i></div>
+            <span>التسليم</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('tab-inventory', 'سجل المخزون', this)">
+            <div class="icon-wrapper"><i class="fa-solid fa-warehouse"></i></div>
+            <span>المخزون</span>
+        </div>
+    </nav>
+</div>
+
+<div id="add-family-modal" class="modal">
+    <div class="modal-content neu-out p-20">
+        <h3 class="text-center text-primary mb-20">إضافة عائلة جديدة</h3>
+        <input type="text" id="add-f-name" class="neu-in w-100 p-15 mb-15" placeholder="اسم رب الأسرة">
+        <input type="number" id="add-f-card" class="neu-in w-100 p-15 mb-15" placeholder="رقم البطاقة التموينية">
+        <input type="number" id="add-f-members" class="neu-in w-100 p-15 mb-20" placeholder="عدد الأفراد">
+        
+        <div class="flex-between" style="gap: 15px;">
+            <button class="btn neu-btn w-100 text-success" onclick="addFamily()">حفظ</button>
+            <button class="btn neu-btn w-100 text-danger" onclick="toggleModal('add-family-modal', false)">إلغاء</button>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
