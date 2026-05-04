@@ -1,0 +1,203 @@
+:root {
+    /* ألوان التصميم الأساسية */
+    --bg-color: #e0e5ec;
+    --primary: #1a5d3a; /* الأخضر المأخوذ من الصورة */
+    --success: #27ae60;
+    --danger: #e74c3c;
+    --warning: #f39c12;
+    --text-main: #2d3436;
+    --text-muted: #636e72;
+    
+    /* ظلال النيومورفيزم */
+    --shadow-light: #ffffff;
+    --shadow-dark: #a3b1c6;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Cairo', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* حاوية التطبيق ليناسب الكمبيوتر والموبايل بشكل احترافي */
+.app-container {
+    width: 100%;
+    max-width: 480px;
+    height: 100vh;
+    background-color: var(--bg-color);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+@media (min-width: 481px) {
+    .app-container {
+        height: 90vh;
+        border-radius: 30px;
+        box-shadow: 15px 15px 30px var(--shadow-dark), -15px -15px 30px var(--shadow-light);
+    }
+}
+
+/* --- أدوات النيومورفيزم (Neumorphism Utilities) --- */
+.neu-out {
+    border-radius: 15px;
+    background: var(--bg-color);
+    box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light);
+}
+
+.neu-in {
+    border-radius: 15px;
+    background: var(--bg-color);
+    box-shadow: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light);
+    border: none;
+    outline: none;
+}
+
+.neu-out-top {
+    border-radius: 25px 25px 0 0;
+    background: var(--bg-color);
+    box-shadow: 0 -6px 12px rgba(163, 177, 198, 0.4);
+}
+
+.neu-btn {
+    border-radius: 12px;
+    background: var(--bg-color);
+    box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.neu-btn:active {
+    box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+}
+
+/* كلاسات مساعدة */
+.text-center { text-align: center; }
+.text-primary { color: var(--primary); }
+.text-success { color: var(--success); }
+.text-danger { color: var(--danger); }
+.text-warning { color: var(--warning); }
+.text-muted { color: var(--text-muted); }
+.text-sm { font-size: 0.85rem; }
+.w-100 { width: 100%; }
+.p-15 { padding: 15px; }
+.p-20 { padding: 20px; }
+.mt-5 { margin-top: 5px; }
+.mt-10 { margin-top: 10px; }
+.mt-15 { margin-top: 15px; }
+.mt-20 { margin-top: 20px; }
+.mb-10 { margin-bottom: 10px; }
+.mb-15 { margin-bottom: 15px; }
+.mb-20 { margin-bottom: 20px; }
+.mr-5 { margin-right: 5px; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.btn { padding: 15px; font-weight: bold; font-size: 1rem; }
+.icon-btn { padding: 12px; font-size: 1.1rem; color: var(--text-muted); border-radius: 50%; width: 45px; height: 45px; display: flex; justify-content: center; align-items: center;}
+
+/* الهيدر العلوي */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-radius: 0 0 25px 25px;
+    z-index: 10;
+}
+.header h2 { font-size: 1.2rem; color: var(--primary); font-weight: 800; }
+
+/* منطقة المحتوى والتبويبات */
+.content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 20px 100px 20px;
+}
+.content::-webkit-scrollbar { display: none; }
+.page { display: none; animation: fadeIn 0.4s ease; }
+.page.active { display: block; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.section-title { font-size: 1.1rem; color: var(--primary); margin-bottom: 15px; font-weight: 700; }
+
+/* الإحصائيات (الرئيسية) */
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+.stat-box { padding: 15px 10px; text-align: center; }
+.stat-box i { font-size: 1.5rem; margin-bottom: 10px; }
+.stat-box h3 { font-size: 1.4rem; margin-bottom: 5px; font-weight: 800;}
+.stat-box p { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; }
+
+/* شريط تقدم المخزون */
+.progress-container { height: 12px; border-radius: 10px; overflow: hidden; padding: 2px; }
+.progress-bar { height: 100%; background: var(--primary); border-radius: 10px; width: 0%; transition: width 0.8s ease; }
+
+/* البحث وقائمة العوائل */
+.search-box { display: flex; align-items: center; padding: 0 15px; height: 50px; }
+.search-box input { border: none; background: transparent; outline: none; width: 100%; margin-right: 10px; font-size: 1rem; color: var(--text-main); font-family: 'Cairo';}
+.search-box input::placeholder { color: #a0a5aa; }
+
+.family-card { padding: 15px; margin-bottom: 15px; }
+.family-card h4 { color: var(--primary); margin-bottom: 5px; font-size: 1.1rem;}
+.status-badge { padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
+.status-received { color: var(--success); background: rgba(39, 174, 96, 0.1); }
+.status-waiting { color: var(--danger); background: rgba(231, 76, 60, 0.1); }
+
+select { font-family: 'Cairo'; color: var(--text-main); font-size: 1rem; appearance: none; background: url('data:image/svg+xml;utf8,<svg fill="%23636e72" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>') no-repeat left 10px center; }
+
+/* الشريط السفلي (Navigation) */
+.bottom-nav {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 5px 20px 5px; /* مساحة إضافية للأسفل في الهواتف */
+    z-index: 100;
+}
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: 0.3s;
+    width: 60px;
+}
+.nav-item .icon-wrapper { padding: 10px; border-radius: 50%; margin-bottom: 5px; transition: 0.3s; }
+.nav-item i { font-size: 1.4rem; }
+.nav-item span { font-size: 0.75rem; font-weight: 700; transition: 0.3s; }
+
+.nav-item.active { color: var(--primary); }
+.nav-item.active .icon-wrapper {
+    box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+    color: var(--primary);
+}
+
+/* النافذة المنبثقة (Modal) */
+.modal {
+    display: none;
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(224, 229, 236, 0.85);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+.modal-content { width: 100%; max-width: 400px; }
